@@ -6,7 +6,9 @@ import Items.Item;
 import Mod.Boss;
 import Mod.Player;
 import Maps.Map;
+import Sound.Sound;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.io.BufferedReader;
@@ -26,12 +28,19 @@ public class GameManager {
     private ArrayList<Item> arrItem;
     private ArrayList<Boss> arrBoss;
 
+    private boolean checkDieWin;
     private static final int TIME_BANG = 120;
     private static final int TIME_WAVE = 15;
     private final int SIZE = 45;
     private Random random=new Random();
     public final Image backGround=
             new ImageIcon(getClass().getResource("/images/background.jpg")).getImage();
+
+    public Clip soundGame;
+
+    public void setCheckDieWin(boolean checkDieWin) {
+        this.checkDieWin = checkDieWin;
+    }
 
     public void initItem(){
         for (int i = 0; i < arrMap.size(); i++) {
@@ -55,6 +64,10 @@ public class GameManager {
         arrItem=new ArrayList<>();
         arrMap = new ArrayList<>();
         arrBoss = new ArrayList<>();
+        Clip start = Sound.getSound(getClass().getResource("/Sound/start.wav"));
+        start.start();
+        soundGame = Sound.getSound(getClass().getResource("/Sound/soundGame.wav"));
+        soundGame.start();
         readTxtMap();
         initBoss();
         initItem();
@@ -100,9 +113,15 @@ public class GameManager {
         player.draw(g2d);
     }
 
+    public boolean isCheckDieWin() {
+        return checkDieWin;
+    }
+
     public void MyBomb(int t) {
         Bomb bomb = player.plantBomb();
         if (arrBomb.size() < player.getBombCount()) {
+            Clip plantBomb = Sound.getSound(getClass().getResource("/Sound/set_boom.wav"));
+            plantBomb.start();
             arrBomb.add(bomb);
             timeBomb.add(t);
         }
@@ -117,8 +136,8 @@ public class GameManager {
             if (t-timeBomb.get(i) >=TIME_BANG){
                 Explosion ex = arrBomb.get(i).booom();
                 arrBomb.remove(i);
-                /*Clip clip=Sound.getSound(getClass().getResource("/sounds/boom_bang.wav"));
-                clip.start();*/
+                Clip boomBang = Sound.getSound(getClass().getResource("/Sound/boom_bang.wav"));
+                boomBang.start();
                 arrWaveBoom.add(ex);
                 timeBomb.remove(i);
                 try {
@@ -135,13 +154,11 @@ public class GameManager {
                 timeWave.remove(i);
             }
         }
-        /*
-        if (player.checkDieToBoss(arrBoss) == true){
-            clip1.stop();
+        if (!player.checkPlayerToBoss(arrBoss)){
+            soundGame.stop();
             setCheckDieWin(false);
             return false;
         }
-        */
         for (int i = 0; i < arrWaveBoom.size(); i++) {
             for (int j = 0; j < arrItem.size(); j++) {
                 if (!arrWaveBoom.get(i).checkBoomToItem(arrWaveBoom.get(i), arrItem.get(j), arrMap)) {
@@ -152,9 +169,9 @@ public class GameManager {
         }
         for (int i=0;i<arrWaveBoom.size();i++){
             if(arrWaveBoom.get(i).checkBoomToPlayer(arrWaveBoom.get(i),arrMap,player)){
-                //clip1.stop();
+                soundGame.stop();
                 //timeDie=t;
-                //setCheckDieWin(false);
+                setCheckDieWin(false);
                 return false;
             }
         }

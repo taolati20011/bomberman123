@@ -1,5 +1,6 @@
 package Mod;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import Maps.Map;
 import Items.Bomb;
 import Items.Item;
+import Sound.Sound;
 
 public class Player extends Mod {
     private int timeMove;
@@ -212,6 +214,16 @@ public class Player extends Mod {
         return false;
     }
 
+    public boolean checkPlayerToBoss(ArrayList<Boss> arrBoss) {
+        for (Boss boss : arrBoss) {
+            Rectangle rectangle = getRect().intersection(boss.getRect());
+            if (!rectangle.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void moveItem(ArrayList<Item> arrItem){
         for (int i = 0; i < arrItem.size(); i++){
             Rectangle rectangle = getRect().intersection(arrItem.get(i).getRect());
@@ -231,8 +243,8 @@ public class Player extends Mod {
                     //System.out.println("Tốc độ: "+speed);
                     arrItem.remove(i);
                 }
-                //Clip clip= Sound.getSound(getClass().getResource("/sounds/item.wav"));
-                //clip.start();
+                Clip item = Sound.getSound(getClass().getResource("/Sound/item.wav"));
+                item.start();
             }
         }
     }

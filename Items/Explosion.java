@@ -1,8 +1,11 @@
 package Items;
 
+import Mod.Boss;
 import Mod.Player;
 import Maps.Map;
+import Sound.Sound;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,6 +18,9 @@ public class Explosion {
     private int lenRight = length;
     private int lenUp = length;
     private int lenDown = length;
+    private int xBossDie;
+    private int yBossDie;
+    private int imageIndex = 0;
     private static final int SIZE = 45;
 
     public final Image[] Ex = {
@@ -252,6 +258,71 @@ public class Explosion {
             }
         }
     return false;
+    }
+
+    public void checkBoomToBoss(ArrayList<Boss> arrBoss) {
+        for (int i = 0; i < arrBoss.size(); i++) {
+            try {
+                Rectangle rectangle1= getRect(x,y).intersection(arrBoss.get(i).getRect());
+                if (rectangle1.isEmpty()== false){
+                    xBossDie = arrBoss.get(i).getX();
+                    yBossDie =arrBoss.get(i).getY();
+                    arrBoss.remove(i);
+                    Clip bangBang = Sound.getSound(getClass().getResource("/Sound/bang_bang.wav"));
+                    bangBang.start();
+                }
+                for (int j = 1; j <= lenLeft; j++) {
+                    int xRaw = x - j * SIZE;
+                    int yRaw = y;
+                    Rectangle rectangle0 = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
+                    if (rectangle0.isEmpty() == false) {
+                        xBossDie= arrBoss.get(i).getX();
+                        yBossDie=arrBoss.get(i).getY();
+                        arrBoss.remove(i);
+                        Clip bangBang = Sound.getSound(getClass().getResource("/Sound/bang_bang.wav"));
+                        bangBang.start();
+                    }
+                }
+                for (int j = 1; j <= lenRight; j++) {
+                    int xRaw = x + j * SIZE;
+                    int yRaw = y;
+                    Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
+                    if (rectangle.isEmpty() == false) {
+                        xBossDie= arrBoss.get(i).getX();
+                        yBossDie=arrBoss.get(i).getY();
+                        arrBoss.remove(i);
+                        Clip bangBang = Sound.getSound(getClass().getResource("/Sound/bang_bang.wav"));
+                        bangBang.start();
+                    }
+                }
+                for (int j = 1; j <= lenUp; j++) {
+                    int xRaw = x;
+                    int yRaw = y - j * SIZE;
+                    Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
+                    if (rectangle.isEmpty() == false) {
+                        xBossDie= arrBoss.get(i).getX();
+                        yBossDie=arrBoss.get(i).getY();
+                        arrBoss.remove(i);
+                        Clip bangBang = Sound.getSound(getClass().getResource("/Sound/bang_bang.wav"));
+                        bangBang.start();
+
+                    }
+                }
+                for (int j = 1; j <= lenDown; j++) {
+                    int xRaw = x;
+                    int yRaw = y + j * SIZE;
+                    Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
+                    if (rectangle.isEmpty() == false) {
+                        xBossDie= arrBoss.get(i).getX();
+                        yBossDie=arrBoss.get(i).getY();
+                        arrBoss.remove(i);
+                        Clip bangBang = Sound.getSound(getClass().getResource("/Sound/bang_bang.wav"));
+                        bangBang.start();
+                    }
+                }
+            }catch (IndexOutOfBoundsException e){
+            }
+        }
     }
 
     public void drawMid(Graphics2D g2d, ArrayList<Map> arrBitMap) {

@@ -1,5 +1,8 @@
 package Items;
 
+import Sound.Sound;
+
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;

@@ -2,7 +2,9 @@ package Game;
 
 import Game.GameManager;
 import Mod.Player;
+import Sound.Sound;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -70,6 +72,31 @@ public class PanelGame extends JPanel implements KeyListener,Runnable {
             } catch (Exception e){
             }
             isRunning = gameManager.AI(t);
+            if (isRunning==false && gameManager.isCheckDieWin()==false){
+                Clip lose = Sound.getSound(getClass().getResource("/Sound/die.wav"));
+                lose.start();
+                int result= JOptionPane.showConfirmDialog(null,"Replay","Game Over",JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION){
+                    bitSet.clear();
+                    gameManager.initGame();
+                    isRunning=true;
+                }else {
+                    System.exit(0);
+                }
+            }
+            if (isRunning== false && gameManager.isCheckDieWin()==true){
+                Clip win = Sound.getSound(getClass().getResource("/Sound/win.wav"));
+                win.start();
+                int result= JOptionPane.showConfirmDialog(null,"Replay","YOU WIN",JOptionPane.YES_NO_OPTION);
+                if (result == JOptionPane.YES_OPTION){
+                    bitSet.clear();
+                    t=0;
+                    gameManager.initGame();
+                    isRunning=true;
+                }else {
+                    System.exit(0);
+                }
+            }
             repaint();
             try {
                 Thread.sleep(20);

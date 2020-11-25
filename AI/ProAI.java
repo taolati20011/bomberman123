@@ -15,6 +15,7 @@ public class ProAI extends AI {
         int bx = boss.getX();
         int by = boss.getY();
 
+        return 0;
 
     }
 }
