@@ -19,10 +19,9 @@ public class PanelHelp extends JPanel implements ActionListener {
             new ImageIcon(getClass().getResource("/images/skipButton2.png")),
     };
     public final Image image =
-            new ImageIcon(getClass().getResource("/images/backgroundHelp.png")).getImage();
+            new ImageIcon(getClass().getResource("/images/help.png")).getImage();
 
     public PanelHelp(MyContainer myContainer) {
-        setBackground(Color.green);
         setLayout(null);
         initComs();
         initListener();
@@ -38,7 +37,7 @@ public class PanelHelp extends JPanel implements ActionListener {
         jbBack= new JButton(icons[0]);
         jbBack.setRolloverIcon(icons[1]);
         jbBack.setSize(icons[0].getIconWidth(),icons[0].getIconHeight());
-        jbBack.setLocation(450,Frame.HEIGHT-icons[0].getIconHeight()-33);
+        jbBack.setLocation(600,Frame.HEIGHT-icons[0].getIconHeight()-33);
         add(jbBack);
     }
 
