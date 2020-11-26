@@ -9,8 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static Game.MyContainer.PANEL_MENU;
-import static Game.Frame.HEIGHT;
-import static Game.Frame.WIDTH;
 
 public class PanelHelp extends JPanel implements ActionListener {
     private JButton jbBack;
@@ -24,10 +22,11 @@ public class PanelHelp extends JPanel implements ActionListener {
             new ImageIcon(getClass().getResource("/images/backgroundHelp.png")).getImage();
 
     public PanelHelp(MyContainer myContainer) {
+        setBackground(Color.green);
         setLayout(null);
         initComs();
         initListener();
-        this.myContainer=myContainer;
+        this.myContainer = myContainer;
     }
 
     private void initListener() {
@@ -52,7 +51,7 @@ public class PanelHelp extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String run=e.getActionCommand();
+        String run = e.getActionCommand();
         switch (run){
             case BACK:{
                 Clip click = Sound.getSound(getClass().getResource("/Sound/click.wav"));

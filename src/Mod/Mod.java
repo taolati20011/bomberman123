@@ -30,4 +30,13 @@ public abstract class Mod {
 
     public abstract void draw(Graphics2D g2d);
 
+    public int roundLocation(int x) {
+        int ans = x / SIZE;
+        ans *= SIZE;
+        if (x - ans < ans + SIZE - x) {
+            return ans;
+        }
+        else return ans + SIZE;
+    }
+
 }

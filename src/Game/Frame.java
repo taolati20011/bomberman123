@@ -1,6 +1,7 @@
 package Game;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class Frame extends JFrame {
     public static final int WIDTH = 765;
@@ -8,6 +9,9 @@ public class Frame extends JFrame {
 
     public Frame(){
         initFrame();
+        URL iconURL = getClass().getResource("/images/icon.png");
+        ImageIcon icon = new ImageIcon(iconURL);
+        this.setIconImage(icon.getImage());
     }
 
     private void initFrame() {

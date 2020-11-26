@@ -7,22 +7,33 @@ import java.util.Random;
 
 import Items.Bomb;
 import Maps.Map;
+import AI.noobAI;
+import AI.ProAI;
 
 public class Boss extends Mod {
-    private int speed;
     private Image image;
     private int imageIndex=0;
+    private int number;
     private Random random= new Random();
+    private boolean proToNoob = false;
 
-    public final Image[] MY_BOSS={
+    public final Image[] Monster = {
             new ImageIcon(getClass().getResource("/images/left_monster.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/right_monster.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/up_monster.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/down_monster.png")).getImage(),
     };
 
+    public final Image[] iBoss = {
+            new ImageIcon(getClass().getResource("/images/boss_left.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/boss_right.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/boss_up.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/boss_down.png")).getImage(),
+    };
+
     public Boss(int x, int y, int orient) {
         super(x, y, orient);
+        this.speed = 1;
     }
 
     public int getX() {
@@ -37,13 +48,8 @@ public class Boss extends Mod {
         orient=newOrient;
     }
 
-    public void creatOrient(){
-        int percent= random.nextInt(100);
-        if (percent>95){
-            int newOrient=random.nextInt(4);
-            changeOrient(newOrient);
-            image = MY_BOSS[newOrient];
-        }
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     @Override
@@ -61,8 +67,24 @@ public class Boss extends Mod {
         return true;
     }
 
-    public void moveBoss(ArrayList<Map> arrMap, ArrayList<Bomb> arrBomb, int t) {
-        int speed = 2;
+    public void selectAI(int t, Player player) {
+        if (t == 0) {
+            noobAI ai = new noobAI();
+            ai.changeOrient(this);
+        } else {
+            ProAI ai = new ProAI(player, this);
+            if (ai.changeMove(player, this) == -1) {
+                selectAI(0, player);
+                proToNoob = true;
+                return;
+            } else {
+                proToNoob = false;
+            }
+            changeOrient(ai.changeMove(player, this));
+        }
+    }
+
+    public void moveBoss(ArrayList<Map> arrMap, ArrayList<Bomb> arrBomb, Player player, int numAI) {
         int xRaw = x;
         int yRaw = y;
         switch (orient) {
@@ -85,15 +107,16 @@ public class Boss extends Mod {
         y = yRaw;
         boolean checkMoveBoss = checkMove(arrMap);
         boolean checkMoveBossBoom= checkMoveBoom(arrBomb);
-        if (checkMoveBoss==true){
-            x=xRaw1;
-            y=yRaw1;
+        if (checkMoveBoss){
+            x = xRaw1;
+            y = yRaw1;
         }
-        if (checkMoveBossBoom==false){
-            x=xRaw1;
-            y=yRaw1;
+        if (!checkMoveBossBoom) {
+            x = xRaw1;
+            y = yRaw1;
         }
-        creatOrient();
+        selectAI(numAI, player);
+        image = iBoss[orient];
     }
 
     public boolean checkMove(ArrayList<Map> arrBitMap) {
@@ -102,7 +125,7 @@ public class Boss extends Mod {
                     bitMap.bit == 4 || bitMap.bit== 6 ||  bitMap.bit== 7 || bitMap.bit== 8
                     || bitMap.bit== 9) {
                 Rectangle rectangle = getRect().intersection(bitMap.getRect());
-                if (rectangle.isEmpty() == false) {
+                if (!rectangle.isEmpty()) {
                     return true;
                 }
             }
@@ -111,7 +134,7 @@ public class Boss extends Mod {
     }
 
     public Rectangle getRect() {
-        Rectangle rectangle= new Rectangle(x,y+25,SIZE-10,SIZE-10);
+        Rectangle rectangle= new Rectangle(x,y+15,SIZE-10,SIZE-10);
         return rectangle;
     }
 

@@ -9,6 +9,7 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import static Game.GameManager.arr;
 
 public class Explosion {
     private int x;
@@ -23,6 +24,23 @@ public class Explosion {
     private int imageIndex = 0;
     private static final int SIZE = 45;
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int roundLocation(int x) {
+        int ans = x / SIZE;
+        ans *= SIZE;
+        if (x - ans < ans + SIZE - x) {
+            return ans;
+        }
+        else return ans + SIZE;
+    }
+
     public final Image[] Ex = {
             new ImageIcon(getClass().getResource("/images/bombbang_left_2.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/bombbang_right_2.png")).getImage(),
@@ -33,6 +51,13 @@ public class Explosion {
             new ImageIcon(getClass().getResource("/images/bombbang_right_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/bombbang_up_1.png")).getImage(),
             new ImageIcon(getClass().getResource("/images/bombbang_down_1.png")).getImage(),
+    };
+
+    public final Image[] DEL_MAP={
+            new ImageIcon(getClass().getResource("/images/del_1.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/del_2.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/del_3.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/del_4.png")).getImage(),
     };
 
     public Explosion(int x, int y,int lenghWave) {
@@ -50,11 +75,11 @@ public class Explosion {
         drawRight(g2d, arrBitMap);
         drawUp(g2d, arrBitMap);
         drawDown(g2d, arrBitMap);
-        /*if (xBossDie!=0 || yBossDie!=0) {
+        if (xBossDie!=0 || yBossDie!=0) {
             imageIndex++;
-            Image image= BOSS_DIE[imageIndex/50%BOSS_DIE.length];
+            Image image= DEL_MAP[imageIndex/50%DEL_MAP.length];
             g2d.drawImage(image, xBossDie, yBossDie, null);
-        }*/
+        }
     }
 
     public Rectangle getRect(int x,int y) {
@@ -82,7 +107,7 @@ public class Explosion {
             int yRaw = y;
             Rectangle rectangle = getRect(xRaw, yRaw).intersection(anItem.getRect());
             if (!rectangle.isEmpty()) {
-                System.out.println(anItem.timeItem);
+                //System.out.println(anItem.timeItem);
                 for (int i = 0; i < arrMap.size(); i++) {
                     Rectangle rec = arrMap.get(i).getRect().intersection(anItem.getRect());
                     if (!rec.isEmpty()) {
@@ -101,7 +126,7 @@ public class Explosion {
             int yRaw = y;
             Rectangle rectangle = getRect(xRaw, yRaw).intersection(anItem.getRect());
             if (!rectangle.isEmpty()) {
-                System.out.println(anItem.timeItem);
+                //System.out.println(anItem.timeItem);
                 for (int i = 0; i < arrMap.size(); i++) {
                     Rectangle rec = arrMap.get(i).getRect().intersection(anItem.getRect());
                     if (!rec.isEmpty()) {
@@ -120,7 +145,7 @@ public class Explosion {
             int yRaw = y - j * SIZE;
             Rectangle rectangle = getRect(xRaw, yRaw).intersection(anItem.getRect());
             if (!rectangle.isEmpty()) {
-                System.out.println(anItem.timeItem);
+                //System.out.println(anItem.timeItem);
                 for (int i = 0; i < arrMap.size(); i++) {
                     Rectangle rec = arrMap.get(i).getRect().intersection(anItem.getRect());
                     if (!rec.isEmpty()) {
@@ -139,7 +164,7 @@ public class Explosion {
             int yRaw = y + j * SIZE;
             Rectangle rectangle = getRect(xRaw, yRaw).intersection(anItem.getRect());
             if (!rectangle.isEmpty()) {
-                System.out.println(anItem.timeItem);
+                //System.out.println(anItem.timeItem);
                 for (int i = 0; i < arrMap.size(); i++) {
                     Rectangle rec = arrMap.get(i).getRect().intersection(anItem.getRect());
                     if (!rec.isEmpty()) {
@@ -260,7 +285,7 @@ public class Explosion {
     return false;
     }
 
-    public void checkBoomToBoss(ArrayList<Boss> arrBoss) {
+    public void checkBoomToBoss(ArrayList<Boss> arrBoss, ArrayList<Map> arrMap) {
         for (int i = 0; i < arrBoss.size(); i++) {
             try {
                 Rectangle rectangle1= getRect(x,y).intersection(arrBoss.get(i).getRect());
@@ -274,6 +299,9 @@ public class Explosion {
                 for (int j = 1; j <= lenLeft; j++) {
                     int xRaw = x - j * SIZE;
                     int yRaw = y;
+                    if (checkBoomToMap(arrMap, xRaw, yRaw)) {
+                        break;
+                    }
                     Rectangle rectangle0 = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
                     if (rectangle0.isEmpty() == false) {
                         xBossDie= arrBoss.get(i).getX();
@@ -286,6 +314,9 @@ public class Explosion {
                 for (int j = 1; j <= lenRight; j++) {
                     int xRaw = x + j * SIZE;
                     int yRaw = y;
+                    if (checkBoomToMap(arrMap, xRaw, yRaw)) {
+                        break;
+                    }
                     Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
                     if (rectangle.isEmpty() == false) {
                         xBossDie= arrBoss.get(i).getX();
@@ -298,6 +329,9 @@ public class Explosion {
                 for (int j = 1; j <= lenUp; j++) {
                     int xRaw = x;
                     int yRaw = y - j * SIZE;
+                    if (checkBoomToMap(arrMap, xRaw, yRaw)) {
+                        break;
+                    }
                     Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
                     if (rectangle.isEmpty() == false) {
                         xBossDie= arrBoss.get(i).getX();
@@ -311,6 +345,9 @@ public class Explosion {
                 for (int j = 1; j <= lenDown; j++) {
                     int xRaw = x;
                     int yRaw = y + j * SIZE;
+                    if (checkBoomToMap(arrMap, xRaw, yRaw)) {
+                        break;
+                    }
                     Rectangle rectangle = getRect(xRaw, yRaw).intersection(arrBoss.get(i).getRect());
                     if (rectangle.isEmpty() == false) {
                         xBossDie= arrBoss.get(i).getX();
@@ -339,6 +376,9 @@ public class Explosion {
                 if (!rectangle.isEmpty()) {
                     if (arrBitMap.get(j).bit == 2 || arrBitMap.get(j).bit == 4
                             || arrBitMap.get(j).bit == 5 ) {
+                        int x = roundLocation(arrBitMap.get(j).getX())/SIZE;
+                        int y = roundLocation(arrBitMap.get(j).getY())/SIZE;
+                        arr[y][x] = 0;
                         arrBitMap.remove(j);
                         lenLeft = lenLeft - (lenLeft - i);
                     } else if (arrBitMap.get(j).bit != 0) {
@@ -367,6 +407,9 @@ public class Explosion {
                 if (!rectangle.isEmpty()) {
                     if (arrBitMap.get(j).bit == 2 || arrBitMap.get(j).bit == 4
                             || arrBitMap.get(j).bit == 5 ) {
+                        int x = roundLocation(arrBitMap.get(j).getX())/SIZE;
+                        int y = roundLocation(arrBitMap.get(j).getY())/SIZE;
+                        arr[y][x] = 0;
                         arrBitMap.remove(j);
                         lenRight = lenRight - (lenRight - i);
                     } else if (arrBitMap.get(j).bit != 0) {
@@ -395,6 +438,9 @@ public class Explosion {
                 if (!rectangle.isEmpty()) {
                     if (arrBitMap.get(j).bit == 2 || arrBitMap.get(j).bit == 4
                             || arrBitMap.get(j).bit == 5 ) {
+                        int x = roundLocation(arrBitMap.get(j).getX())/SIZE;
+                        int y = roundLocation(arrBitMap.get(j).getY())/SIZE;
+                        arr[y][x] = 0;
                         arrBitMap.remove(j);
                         lenUp = lenUp - (lenUp - i);
                     } else if (arrBitMap.get(j).bit != 0) {
@@ -423,6 +469,9 @@ public class Explosion {
                 if (!rectangle.isEmpty()) {
                     if (arrBitMap.get(j).bit == 2 || arrBitMap.get(j).bit == 4
                             || arrBitMap.get(j).bit == 5 ) {
+                        int x = roundLocation(arrBitMap.get(j).getX())/SIZE;
+                        int y = roundLocation(arrBitMap.get(j).getY())/SIZE;
+                        arr[y][x] = 0;
                         arrBitMap.remove(j);
                         lenDown = lenDown - (lenDown - i);
                     } else if (arrBitMap.get(j).bit != 0) {

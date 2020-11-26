@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static Game.Frame.WIDTH;
-import static Game.Frame.HEIGHT;
 import static Game.MyContainer.PANEL_GAME;
 import static Game.MyContainer.PANEL_HELP;
 

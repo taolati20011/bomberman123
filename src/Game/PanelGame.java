@@ -80,7 +80,7 @@ public class PanelGame extends JPanel implements KeyListener,Runnable {
                     bitSet.clear();
                     gameManager.initGame();
                     isRunning=true;
-                }else {
+                } else {
                     System.exit(0);
                 }
             }
@@ -93,7 +93,7 @@ public class PanelGame extends JPanel implements KeyListener,Runnable {
                     t=0;
                     gameManager.initGame();
                     isRunning=true;
-                }else {
+                } else {
                     System.exit(0);
                 }
             }

@@ -16,6 +16,8 @@ public class Player extends Mod {
     private int imageIndex = 0;
     private int lenghtBoomBang = 1;
     private int bombCount = 1;
+    private int bombLimit = 4;
+    private int speedLimit = 3;
 
     public final Image[] IMAGES_PLAYER_LEFT= {
             new ImageIcon(getClass().getResource("/images/player_left_1.png")).getImage(),
@@ -68,8 +70,16 @@ public class Player extends Mod {
         this.speed = speed;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
     public void setLenghtBoomBang(int lenghtBoomBang) {
         this.lenghtBoomBang = lenghtBoomBang;
+    }
+
+    public int getLenghtBoomBang() {
+        return lenghtBoomBang;
     }
 
     public boolean isIrun() {
@@ -173,20 +183,10 @@ public class Player extends Mod {
             x = xRaw1;
             y = yRaw1;
         }
-
         if (!checkMovetoBomb) {
             x = xRaw1;
             y = yRaw1;
         }
-    }
-
-    public int roundLocation(int x) {
-        int ans = x / SIZE;
-        ans *= SIZE;
-        if (x - ans < ans + SIZE - x) {
-            return ans;
-        }
-        else return ans + SIZE;
     }
 
     public Bomb plantBomb() {
@@ -228,19 +228,19 @@ public class Player extends Mod {
         for (int i = 0; i < arrItem.size(); i++){
             Rectangle rectangle = getRect().intersection(arrItem.get(i).getRect());
             if (!rectangle.isEmpty()){
-                if (arrItem.get(i).getBitItem()==0){
+                if (arrItem.get(i).getBitItem()==0 && getBombCount() < bombLimit){
                     setBombCount(bombCount+1);
-                    //System.out.println("Số Boom: "+getSoBoom());
+                    System.out.println("Số Boom: "+ getBombCount());
                     arrItem.remove(i);
                 }
                 else if (arrItem.get(i).getBitItem()==1){
                     setLenghtBoomBang(lenghtBoomBang+1);
-                    //System.out.println("Độ dài Boom: "+lenghBoomBang);
+                    System.out.println("Độ dài Boom: "+ getLenghtBoomBang());
                     arrItem.remove(i);
                 }
-                else if (arrItem.get(i).getBitItem()==2){
+                else if (arrItem.get(i).getBitItem()==2 && speed < speedLimit){
                     setSpeed(speed+1);
-                    //System.out.println("Tốc độ: "+speed);
+                    System.out.println("Tốc độ: "+speed);
                     arrItem.remove(i);
                 }
                 Clip item = Sound.getSound(getClass().getResource("/Sound/item.wav"));
