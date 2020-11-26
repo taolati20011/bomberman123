@@ -228,20 +228,24 @@ public class Player extends Mod {
         for (int i = 0; i < arrItem.size(); i++){
             Rectangle rectangle = getRect().intersection(arrItem.get(i).getRect());
             if (!rectangle.isEmpty()){
-                if (arrItem.get(i).getBitItem()==0 && getBombCount() < bombLimit){
-                    setBombCount(bombCount+1);
-                    System.out.println("Số Boom: "+ getBombCount());
+                if (arrItem.get(i).getBitItem() == 0){
                     arrItem.remove(i);
+                    if (getBombCount() < bombLimit) {
+                        setBombCount(bombCount+1);
+                        System.out.println("Số Boom: "+ getBombCount());
+                    }
                 }
-                else if (arrItem.get(i).getBitItem()==1){
+                else if (arrItem.get(i).getBitItem() == 1){
                     setLenghtBoomBang(lenghtBoomBang+1);
                     System.out.println("Độ dài Boom: "+ getLenghtBoomBang());
                     arrItem.remove(i);
                 }
-                else if (arrItem.get(i).getBitItem()==2 && speed < speedLimit){
-                    setSpeed(speed+1);
-                    System.out.println("Tốc độ: "+speed);
+                else if (arrItem.get(i).getBitItem() == 2){
                     arrItem.remove(i);
+                    if (speed < speedLimit) {
+                        setSpeed(speed+1);
+                        System.out.println("Tốc độ: "+speed);
+                    }
                 }
                 Clip item = Sound.getSound(getClass().getResource("/Sound/item.wav"));
                 item.start();

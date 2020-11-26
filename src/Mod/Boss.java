@@ -1,14 +1,17 @@
 package Mod;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 import Items.Bomb;
+import Items.Item;
 import Maps.Map;
 import AI.noobAI;
 import AI.ProAI;
+import Sound.Sound;
 
 public class Boss extends Mod {
     private Image image;
@@ -134,8 +137,25 @@ public class Boss extends Mod {
     }
 
     public Rectangle getRect() {
-        Rectangle rectangle= new Rectangle(x,y+15,SIZE-10,SIZE-10);
+        Rectangle rectangle= new Rectangle(x,y+25,SIZE-10,SIZE-10);
         return rectangle;
+    }
+
+    public void moveItem(ArrayList<Item> arrItem) {
+        for (int i = 0; i < arrItem.size(); i++){
+            Rectangle rectangle = getRect().intersection(arrItem.get(i).getRect());
+            if (!rectangle.isEmpty()){
+                if (arrItem.get(i).getBitItem() == 0){
+                    arrItem.remove(i);
+                }
+                else if (arrItem.get(i).getBitItem() == 1){
+                    arrItem.remove(i);
+                }
+                else if (arrItem.get(i).getBitItem() == 2){
+                    arrItem.remove(i);
+                }
+            }
+        }
     }
 
 }

@@ -41,6 +41,7 @@ public class GameManager {
             new ImageIcon(getClass().getResource("/images/background.jpg")).getImage();
 
     public Clip soundGame;
+    public Clip timeup;
 
     public void setCheckDieWin(boolean checkDieWin) {
         this.checkDieWin = checkDieWin;
@@ -76,6 +77,7 @@ public class GameManager {
         soundGame = Sound.getSound(getClass().getResource("/Sound/soundGame.wav"));
         soundGame.start();
         soundGame.loop(100);
+        timeup = Sound.getSound(getClass().getResource("/Sound/timeUp.wav"));
         System.out.println("Số Boom: " + player.getBombCount());
         System.out.println("Độ dài Boom: " + player.getLenghtBoomBang());
         System.out.println("Tốc độ: " + player.getSpeed());
@@ -88,9 +90,6 @@ public class GameManager {
         int orient1 = random.nextInt(4);
         Boss boss1 = new Boss(675,45,orient1);
         arrBoss.add(boss1);
-        int orient2 = random.nextInt(4);
-        Boss boss2 = new Boss(675, 585, orient2);
-        arrBoss.add(boss2);
     }
 
     public void movePlayer(int orient) {
@@ -138,9 +137,11 @@ public class GameManager {
 
     public boolean AI(int t) {
         for (int i = 0; i < arrBoss.size(); i++){
-            arrBoss.get(i).moveBoss(arrMap,arrBomb,player,1);
+            arrBoss.get(i).moveBoss(arrMap,arrBomb,player,i);
+            arrBoss.get(i).moveItem(arrItem);
         }
-        if (arrBoss.size() == 2) {
+        if (arrBoss.size() == 1) {
+            timeup.start();
             for (Boss boss : arrBoss) {
                 boss.setSpeed(2);
             }
@@ -186,7 +187,6 @@ public class GameManager {
         for (int i=0;i<arrWaveBoom.size();i++){
             if(arrWaveBoom.get(i).checkBoomToPlayer(arrWaveBoom.get(i),arrMap,player)){
                 soundGame.stop();
-                //timeDie=t;
                 setCheckDieWin(false);
                 return false;
             }
