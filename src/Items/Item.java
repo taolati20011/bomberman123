@@ -13,6 +13,7 @@ public class Item {
     private int bitItem;
     public int timeItem;
     private final int SIZE = 45;
+    private int index = 0;
     private Image image;
     private Random random=new Random();
     public final Image[] ITEM_IMAGE={
@@ -21,12 +22,27 @@ public class Item {
             new ImageIcon(getClass().getResource("/images/item_shoe.png")).getImage(),
     };
 
+    public final Image[] Portal = {
+            new ImageIcon(getClass().getResource("/images/portal1.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/portal2.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/portal3.png")).getImage(),
+            new ImageIcon(getClass().getResource("/images/portal4.png")).getImage(),
+    };
+
     public Item(int x, int y) {
         int rd = random.nextInt(3);
         this.x = x;
         this.y = y;
         this.bitItem = rd;
         this.image = ITEM_IMAGE[rd];
+        this.timeItem = 20;
+    }
+
+    public Item(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.bitItem = 3;
+        this.image = ITEM_IMAGE[0];
         this.timeItem = 20;
     }
 
@@ -52,6 +68,12 @@ public class Item {
     }
 
     public void draw(Graphics2D g2d) {
+        if (this.bitItem == 3) {
+            image = Portal[index / 5 % Portal.length];
+            g2d.drawImage(image, x + 5, y, SIZE, SIZE, null);
+            index++;
+            return;
+        }
         g2d.drawImage(image, x+5, y, SIZE - 10, SIZE - 10, null);
     }
 }

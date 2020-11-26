@@ -18,6 +18,7 @@ public class Player extends Mod {
     private int bombCount = 1;
     private int bombLimit = 4;
     private int speedLimit = 3;
+    public boolean isWin = false;
 
     public final Image[] IMAGES_PLAYER_LEFT= {
             new ImageIcon(getClass().getResource("/images/player_left_1.png")).getImage(),
@@ -234,18 +235,18 @@ public class Player extends Mod {
                         setBombCount(bombCount+1);
                         System.out.println("Số Boom: "+ getBombCount());
                     }
-                }
-                else if (arrItem.get(i).getBitItem() == 1){
+                } else if (arrItem.get(i).getBitItem() == 1){
                     setLenghtBoomBang(lenghtBoomBang+1);
                     System.out.println("Độ dài Boom: "+ getLenghtBoomBang());
                     arrItem.remove(i);
-                }
-                else if (arrItem.get(i).getBitItem() == 2){
+                } else if (arrItem.get(i).getBitItem() == 2){
                     arrItem.remove(i);
                     if (speed < speedLimit) {
                         setSpeed(speed+1);
                         System.out.println("Tốc độ: "+speed);
                     }
+                } else if (arrItem.get(i).getBitItem() == 3) {
+                    isWin = true;
                 }
                 Clip item = Sound.getSound(getClass().getResource("/Sound/item.wav"));
                 item.start();

@@ -58,6 +58,8 @@ public class GameManager {
                 arrItem.add(item);
             }
         }
+        Item item = new Item(675, 630 - 45, 3);
+        arrItem.add(item);
     }
 
     public void initGame() {
@@ -136,6 +138,11 @@ public class GameManager {
     }
 
     public boolean AI(int t) {
+        if (player.isWin) {
+            setCheckDieWin(true);
+            soundGame.stop();
+            return false;
+        }
         for (int i = 0; i < arrBoss.size(); i++){
             arrBoss.get(i).moveBoss(arrMap,arrBomb,player,i);
             arrBoss.get(i).moveItem(arrItem);
